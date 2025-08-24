@@ -39,7 +39,7 @@ It provides a central dashboard to manage items, scrape latest prices, and gain 
 
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/your-username/item-price-insight.git
+git clone https://github.com/Akash-Chak/item-price-insight.git
 cd item-price-insight
 ````
 
