@@ -31,16 +31,32 @@
         });
     }
 
-    // ✅ Add new row
+    // ✅ Find next available ID
+    function getNextId() {
+        const ids = [...document.querySelectorAll("#itemsTable tbody tr input[name='id']")]
+            .map(input => parseInt(input.value) || 0);
+        return ids.length > 0 ? Math.max(...ids) + 1 : 1;
+    }
+
+    // ✅ Add new row with auto ID + delete button
     function addRow() {
         const table = document.getElementById("itemsTable").getElementsByTagName("tbody")[0];
         const newRow = table.insertRow();
+        const newId = getNextId();
 
         newRow.innerHTML = `
-            <td><input type="text" name="id" oninput="markModified()"></td>
+            <td><input type="text" name="id" value="${newId}" readonly></td>
             <td><input type="text" name="title" oninput="markModified()"></td>
             <td><input type="text" name="ecommerce_link" oninput="markModified()"></td>
+            <td><button type="button" class="delete-btn" onclick="deleteRow(this)">Delete</button></td>
         `;
+        markModified();
+    }
+
+    // ✅ Delete row
+    function deleteRow(btn) {
+        const row = btn.closest("tr");
+        row.remove();
         markModified();
     }
 
@@ -103,14 +119,16 @@
                     <th>ID</th>
                     <th>Title</th>
                     <th>Item URL</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
                 {% for item in items %}
                 <tr>
-                    <td><input type="text" name="id" value="{{ item.id }}" oninput="markModified()"></td>
+                    <td><input type="text" name="id" value="{{ item.id }}" readonly></td>
                     <td><input type="text" name="title" value="{{ item.title }}" oninput="markModified()"></td>
                     <td><input type="text" name="ecommerce_link" value="{{ item.ecommerce_link }}" oninput="markModified()"></td>
+                    <td><button type="button" class="delete-btn" onclick="deleteRow(this)">Delete</button></td>
                 </tr>
                 {% endfor %}
             </tbody>

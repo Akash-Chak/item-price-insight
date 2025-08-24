@@ -7,7 +7,8 @@
 }
 
 /* General button styling for consistency */
-.actions button {
+.actions button,
+.delete-btn {
   padding: 0.6rem 1.2rem;
   border-radius: 8px;
   border: none;
@@ -42,6 +43,15 @@
 }
 .scrape-btn:hover {
   background: #166534;
+}
+
+/* Delete button */
+.delete-btn {
+  background: #dc2626;
+  color: #fff;
+}
+.delete-btn:hover {
+  background: #b91c1c;
 }
 
 /* Loading overlay */
