@@ -98,8 +98,7 @@ item-price-insight/
 
 * Displays all items in a comparison table.
 * Shows scraped prices, official prices, and recommendation.
-
-*(Insert screenshot here — e.g., `screenshots/home.png`)*
+![Home Page](screenshots/home.png)
 
 ---
 
@@ -107,9 +106,7 @@ item-price-insight/
 
 * Add, edit, or delete items.
 * Items are updated in `items.json` automatically.
-
-*(Insert screenshot here — e.g., `screenshots/items.png`)*
-
+![Items Page](screenshots/items.png)
 ---
 
 ## 🚧 Development Notes
