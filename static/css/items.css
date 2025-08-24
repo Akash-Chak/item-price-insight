@@ -1,71 +1,66 @@
-/* === Items Management Page === */
-h2 {
-  margin-bottom: 1rem;
-  color: #1e3a8a;
-}
-
-form {
-  display: flex;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
-}
-
-form input, form select {
-  padding: 0.6rem;
-  border: 1px solid #d1d5db;
-  border-radius: 6px;
-  flex: 1;
-}
-
-form button {
-  background: #16a34a;
-}
-
-form button:hover {
-  background: #15803d;
-}
-
-/* === Table === */
-.table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 1rem;
-}
-
-.table th, .table td {
-  padding: 0.8rem;
-  border-bottom: 1px solid #e5e7eb;
-  text-align: left;
-}
-
-.table th {
-  background: #f3f4f6;
-  font-weight: 600;
-}
-
-.table tr:hover {
-  background: #f9fafb;
-}
-
-/* === Action buttons in table === */
-.action-btn {
-  padding: 0.4rem 0.8rem;
-  font-size: 0.85rem;
-  margin-right: 0.5rem;
-}
-
-.action-btn.edit {
+/* Scraper button */
+.scrape-btn {
   background: #2563eb;
+  color: #fff;
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  margin-bottom: 1rem;
 }
-
-.action-btn.edit:hover {
+.scrape-btn:hover {
   background: #1d4ed8;
 }
 
-.action-btn.delete {
-  background: #dc2626;
+/* Loading overlay */
+#loadingOverlay {
+  display: none;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.5);
+  z-index: 9999;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  color: #fff;
+  font-size: 1.2rem;
+}
+.spinner {
+  border: 6px solid #f3f3f3;
+  border-top: 6px solid #2563eb;
+  border-radius: 50%;
+  width: 50px; height: 50px;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
+}
+@keyframes spin {
+  0% { transform: rotate(0deg);}
+  100% { transform: rotate(360deg);}
 }
 
-.action-btn.delete:hover {
-  background: #b91c1c;
+/* Dropdown */
+.dropdown {
+  display: none;
+  position: relative;
+  margin-top: 1rem;
+}
+.dropbtn {
+  background: #16a34a;
+  color: white;
+  padding: 0.6rem 1rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.dropbtn:hover {
+  background: #15803d;
+}
+.dropdown-content {
+  display: block;
+  background: #f9fafb;
+  padding: 1rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  margin-top: 0.5rem;
 }

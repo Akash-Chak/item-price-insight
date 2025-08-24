@@ -94,7 +94,7 @@ def parse_product_page(html: str) -> Dict[str, Optional[str]]:
         "model_name": model_name,
     }
 
-def scrape_items():
+def scrape_items(return_path=False):
     """Scrape ecommerce data for each item and save a dated snapshot."""
     with open(ITEMS_FILE, "r") as f:
         items = json.load(f)
@@ -123,6 +123,7 @@ def scrape_items():
         except Exception as e:
             print(f"❌ Failed to scrape {link}: {e}")
 
+
     # Save snapshot
     date_str = datetime.now().strftime("%Y-%m-%d")
     outfile = os.path.join(SNAPSHOT_DIR, f"scraped_{date_str}.json")
@@ -130,6 +131,10 @@ def scrape_items():
         json.dump(results, f, indent=2, ensure_ascii=False)
 
     print(f"✅ Saved {len(results)} items to {outfile}")
+
+    if return_path:
+        return results, outfile
+    return results
 
 
 if __name__ == "__main__":

@@ -59,3 +59,18 @@ table td {
   padding: 10px 15px;
   text-align: left;
 }
+
+.reload-btn {
+  display: inline-block;
+  background: #2563eb;
+  color: #fff;
+  padding: 8px 16px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: background 0.2s;
+}
+
+.reload-btn:hover {
+  background: #1d4ed8;
+}

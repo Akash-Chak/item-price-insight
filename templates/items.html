@@ -2,76 +2,120 @@
 {% block extra_css %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/items.css') }}">
 {% endblock %}
+
 {% block head %}
 <script>
-    let isModified = false;
+    async function runScraper() {
+        const check = await fetch("/check_snapshot").then(res => res.json());
+        if (check.exists) {
+            const proceed = confirm("A snapshot already exists for today. Do you still want to run the scraper?");
+            if (!proceed) return;
+        }
 
-    function markModified() {
-        isModified = true;
-        document.getElementById("updateBtn").disabled = false;
-    }
+        document.getElementById("loadingOverlay").style.display = "flex";
 
-    function addRow() {
-        const table = document.getElementById("itemsTable").getElementsByTagName("tbody")[0];
-        const newRow = table.insertRow();
-        ["id", "title", "ecommerce_link"].forEach(key => {
-            let cell = newRow.insertCell();
-            let input = document.createElement("input");
-            input.type = "text";
-            input.name = key;
-            input.oninput = markModified;
-            cell.appendChild(input);
-        });
-    }
-
-    function saveItems() {
-        const rows = document.querySelectorAll("#itemsTable tbody tr");
-        let items = [];
-        rows.forEach(row => {
-            let inputs = row.querySelectorAll("input");
-            let obj = {};
-            inputs.forEach(input => { obj[input.name] = input.value; });
-            items.push(obj);
-        });
-
-        fetch("/update_items", {
-            method: "POST",
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify(items)
-        }).then(res => res.json()).then(data => {
+        fetch("/run_scraper", { method: "POST" })
+        .then(res => res.json())
+        .then(data => {
+            document.getElementById("loadingOverlay").style.display = "none";
             if (data.status === "success") {
-                alert("Items updated successfully!");
-                isModified = false;
-                document.getElementById("updateBtn").disabled = true;
+                document.getElementById("scrapeResult").style.display = "block";
+                document.getElementById("scrapeMessage").innerText = data.message;
             } else {
                 alert("Error: " + data.message);
             }
         });
+    }
+
+    // ✅ Add new row
+    function addRow() {
+        const table = document.getElementById("itemsTable").getElementsByTagName("tbody")[0];
+        const newRow = table.insertRow();
+
+        newRow.innerHTML = `
+            <td><input type="text" name="id" oninput="markModified()"></td>
+            <td><input type="text" name="title" oninput="markModified()"></td>
+            <td><input type="text" name="ecommerce_link" oninput="markModified()"></td>
+        `;
+        markModified();
+    }
+
+    function markModified() {
+        document.getElementById("updateBtn").disabled = false;
+    }
+
+    // ✅ Save all rows into items.json
+    async function saveItems() {
+        const rows = document.querySelectorAll("#itemsTable tbody tr");
+        let items = [];
+
+        rows.forEach(row => {
+            const id = row.querySelector('input[name="id"]').value.trim();
+            const title = row.querySelector('input[name="title"]').value.trim();
+            const link = row.querySelector('input[name="ecommerce_link"]').value.trim();
+
+            if (id && title && link) { // Only save non-empty rows
+                items.push({ id, title, ecommerce_link: link });
+            }
+        });
+
+        const res = await fetch("/update_items", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(items)
+        });
+
+        const data = await res.json();
+        if (data.status === "success") {
+            alert("Items updated successfully!");
+            document.getElementById("updateBtn").disabled = true;
+        } else {
+            alert("Error updating items: " + data.message);
+        }
     }
 </script>
 {% endblock %}
 
 {% block content %}
 <h1 style="text-align:center;">Manage Items</h1>
+
+<div class="actions">
+    <button class="scrape-btn" onclick="runScraper()">Scrape Items</button>
+</div>
+
+<div id="loadingOverlay">
+    <div class="spinner"></div>
+    <p>Scraping in progress...</p>
+</div>
+
+<div id="scrapeResult" class="dropdown">
+    <button class="dropbtn">Scraper Finished</button>
+    <div class="dropdown-content">
+        <p id="scrapeMessage"></p>
+    </div>
+</div>
+
 <div style="max-height:400px; overflow-y:auto;">
-    <table id="itemsTable" border="1" style="width:100%; border-collapse:collapse;">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Title</th>
-                <th>Item URL</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for item in items %}
-            <tr>
-                <td><input type="text" name="id" value="{{ item.id }}" oninput="markModified()"></td>
-                <td><input type="text" name="title" value="{{ item.title }}" oninput="markModified()"></td>
-                <td><input type="text" name="ecommerce_link" value="{{ item.ecommerce_link }}" oninput="markModified()"></td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+    <form id="itemsForm">
+        <table id="itemsTable" border="1" style="width:100%; border-collapse:collapse;">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Title</th>
+                    <th>Item URL</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in items %}
+                <tr>
+                    <td><input type="text" name="id" value="{{ item.id }}" oninput="markModified()"></td>
+                    <td><input type="text" name="title" value="{{ item.title }}" oninput="markModified()"></td>
+                    <td><input type="text" name="ecommerce_link" value="{{ item.ecommerce_link }}" oninput="markModified()"></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </form>
 </div>
 <button onclick="addRow()">Add Row</button>
 <button id="updateBtn" onclick="saveItems()" disabled>Update Items Data</button>

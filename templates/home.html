@@ -4,6 +4,12 @@
 {% endblock %}
 {% block content %}
 <h1 style="text-align:center;">Item Price Insight</h1>
+<div style="text-align:center; margin-bottom:15px;">
+    <a href="{{ url_for('home.reload_data') }}" class="reload-btn">🔄 Reload Latest Data</a>
+</div>
+<table>
+    <thead>
+
 <table>
     <thead>
         <tr>
