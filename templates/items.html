@@ -18,11 +18,15 @@
         .then(res => res.json())
         .then(data => {
             document.getElementById("loadingOverlay").style.display = "none";
+            const resultBox = document.getElementById("scrapeResult");
+            resultBox.style.display = "block";
+
             if (data.status === "success") {
-                document.getElementById("scrapeResult").style.display = "block";
+                resultBox.className = "success";
                 document.getElementById("scrapeMessage").innerText = data.message;
             } else {
-                alert("Error: " + data.message);
+                resultBox.className = "error";
+                document.getElementById("scrapeMessage").innerText = "Error: " + data.message;
             }
         });
     }
@@ -66,11 +70,16 @@
         });
 
         const data = await res.json();
+        const resultBox = document.getElementById("scrapeResult");
+        resultBox.style.display = "block";
+
         if (data.status === "success") {
-            alert("Items updated successfully!");
+            resultBox.className = "success";
+            document.getElementById("scrapeMessage").innerText = "Items updated successfully!";
             document.getElementById("updateBtn").disabled = true;
         } else {
-            alert("Error updating items: " + data.message);
+            resultBox.className = "error";
+            document.getElementById("scrapeMessage").innerText = "Error updating items: " + data.message;
         }
     }
 </script>
@@ -79,21 +88,12 @@
 {% block content %}
 <h1 style="text-align:center;">Manage Items</h1>
 
-<div class="actions">
-    <button class="scrape-btn" onclick="runScraper()">Scrape Items</button>
-</div>
-
 <div id="loadingOverlay">
     <div class="spinner"></div>
     <p>Scraping in progress...</p>
 </div>
 
-<div id="scrapeResult" class="dropdown">
-    <button class="dropbtn">Scraper Finished</button>
-    <div class="dropdown-content">
-        <p id="scrapeMessage"></p>
-    </div>
-</div>
+<div id="scrapeResult"><p id="scrapeMessage"></p></div>
 
 <div style="max-height:400px; overflow-y:auto;">
     <form id="itemsForm">
@@ -117,6 +117,10 @@
         </table>
     </form>
 </div>
-<button onclick="addRow()">Add Row</button>
-<button id="updateBtn" onclick="saveItems()" disabled>Update Items Data</button>
+
+<div class="actions">
+    <button class="add-btn" onclick="addRow()" type="button">Add Row</button>
+    <button id="updateBtn" class="update-btn" onclick="saveItems()" disabled type="button">Update Items Data</button>
+    <button class="scrape-btn" onclick="runScraper()" type="button">Scrape Items</button>
+</div>
 {% endblock %}
