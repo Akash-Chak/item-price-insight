@@ -1,0 +1,71 @@
+/* === Items Management Page === */
+h2 {
+  margin-bottom: 1rem;
+  color: #1e3a8a;
+}
+
+form {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+form input, form select {
+  padding: 0.6rem;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  flex: 1;
+}
+
+form button {
+  background: #16a34a;
+}
+
+form button:hover {
+  background: #15803d;
+}
+
+/* === Table === */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+.table th, .table td {
+  padding: 0.8rem;
+  border-bottom: 1px solid #e5e7eb;
+  text-align: left;
+}
+
+.table th {
+  background: #f3f4f6;
+  font-weight: 600;
+}
+
+.table tr:hover {
+  background: #f9fafb;
+}
+
+/* === Action buttons in table === */
+.action-btn {
+  padding: 0.4rem 0.8rem;
+  font-size: 0.85rem;
+  margin-right: 0.5rem;
+}
+
+.action-btn.edit {
+  background: #2563eb;
+}
+
+.action-btn.edit:hover {
+  background: #1d4ed8;
+}
+
+.action-btn.delete {
+  background: #dc2626;
+}
+
+.action-btn.delete:hover {
+  background: #b91c1c;
+}

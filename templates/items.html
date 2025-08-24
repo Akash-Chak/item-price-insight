@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/items.css') }}">
+{% endblock %}
+{% block head %}
+<script>
+    let isModified = false;
+
+    function markModified() {
+        isModified = true;
+        document.getElementById("updateBtn").disabled = false;
+    }
+
+    function addRow() {
+        const table = document.getElementById("itemsTable").getElementsByTagName("tbody")[0];
+        const newRow = table.insertRow();
+        ["id", "title", "image"].forEach(key => {
+            let cell = newRow.insertCell();
+            let input = document.createElement("input");
+            input.type = "text";
+            input.name = key;
+            input.oninput = markModified;
+            cell.appendChild(input);
+        });
+    }
+
+    function saveItems() {
+        const rows = document.querySelectorAll("#itemsTable tbody tr");
+        let items = [];
+        rows.forEach(row => {
+            let inputs = row.querySelectorAll("input");
+            let obj = {};
+            inputs.forEach(input => { obj[input.name] = input.value; });
+            items.push(obj);
+        });
+
+        fetch("/update_items", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify(items)
+        }).then(res => res.json()).then(data => {
+            if (data.status === "success") {
+                alert("Items updated successfully!");
+                isModified = false;
+                document.getElementById("updateBtn").disabled = true;
+            } else {
+                alert("Error: " + data.message);
+            }
+        });
+    }
+</script>
+{% endblock %}
+
+{% block content %}
+<h1 style="text-align:center;">Manage Items</h1>
+<div style="max-height:400px; overflow-y:auto;">
+    <table id="itemsTable" border="1" style="width:100%; border-collapse:collapse;">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Title</th>
+                <th>Image URL</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in items %}
+            <tr>
+                <td><input type="text" name="id" value="{{ item.id }}" oninput="markModified()"></td>
+                <td><input type="text" name="title" value="{{ item.title }}" oninput="markModified()"></td>
+                <td><input type="text" name="image" value="{{ item.image }}" oninput="markModified()"></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<button onclick="addRow()">Add Row</button>
+<button id="updateBtn" onclick="saveItems()" disabled>Update Items Data</button>
+{% endblock %}

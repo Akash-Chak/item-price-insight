@@ -1,77 +1,35 @@
-<!-- templates/home.html -->
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Price Insight App</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f8f9fa;
-        }
-        .container {
-            width: 80%;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        h1 {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-        th, td {
-            padding: 10px;
-            border: 1px solid #ddd;
-            text-align: center;
-        }
-        th {
-            background-color: #007BFF;
-            color: white;
-        }
-        img {
-            max-width: 60px;
-            height: auto;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1>Item Price Insight</h1>
-        <table>
-            <thead>
-                <tr>
-                    <th>Image</th>
-                    <th>Item Name</th>
-                    <th>Current Price</th>
-                    <th>Official Price</th>
-                    <th>Recommendation</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% if results %}
-                    {% for item in results %}
-                    <tr>
-                        <td><img src="{{ item.image_url }}" alt="{{ item.name }}"></td>
-                        <td>{{ item.name }}</td>
-                        <td>{{ item.ecommerce_price }}</td>
-                        <td>{{ item.official_price }}</td>
-                        <td>{{ item.recommendation }}</td>
-                    </tr>
-                    {% endfor %}
-                {% else %}
-                    <tr>
-                        <td colspan="5">No items found. Please check if your data is being loaded into <code>insights</code> in your Flask route.</td>
-                    </tr>
-                {% endif %}
-            </tbody>
-        </table>
-    </div>
-</body>
-</html>
+{% extends "base.html" %}
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
+{% endblock %}
+{% block content %}
+<h1 style="text-align:center;">Item Price Insight</h1>
+<table>
+    <thead>
+        <tr>
+            <th>Image</th>
+            <th>Item Name</th>
+            <th>Current Price</th>
+            <th>Official Price</th>
+            <th>Recommendation</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% if results %}
+            {% for item in results %}
+            <tr>
+                <td><img src="{{ item.image_url }}" alt="{{ item.name }}" style="max-width:60px;"></td>
+                <td>{{ item.name }}</td>
+                <td>{{ item.ecommerce_price }}</td>
+                <td>{{ item.official_price }}</td>
+                <td>{{ item.recommendation }}</td>
+            </tr>
+            {% endfor %}
+        {% else %}
+            <tr>
+                <td colspan="5">No items found. Please add items in the Items page.</td>
+            </tr>
+        {% endif %}
+    </tbody>
+</table>
+{% endblock %}
