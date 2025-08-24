@@ -14,7 +14,7 @@
     function addRow() {
         const table = document.getElementById("itemsTable").getElementsByTagName("tbody")[0];
         const newRow = table.insertRow();
-        ["id", "title", "image"].forEach(key => {
+        ["id", "title", "ecommerce_link"].forEach(key => {
             let cell = newRow.insertCell();
             let input = document.createElement("input");
             input.type = "text";
@@ -59,7 +59,7 @@
             <tr>
                 <th>ID</th>
                 <th>Title</th>
-                <th>Image URL</th>
+                <th>Item URL</th>
             </tr>
         </thead>
         <tbody>
@@ -67,7 +67,7 @@
             <tr>
                 <td><input type="text" name="id" value="{{ item.id }}" oninput="markModified()"></td>
                 <td><input type="text" name="title" value="{{ item.title }}" oninput="markModified()"></td>
-                <td><input type="text" name="image" value="{{ item.image }}" oninput="markModified()"></td>
+                <td><input type="text" name="ecommerce_link" value="{{ item.ecommerce_link }}" oninput="markModified()"></td>
             </tr>
             {% endfor %}
         </tbody>

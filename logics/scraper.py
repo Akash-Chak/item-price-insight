@@ -31,12 +31,14 @@ def parse_product_page(html: str) -> Dict[str, Optional[str]]:
 
     # --- Image ---
     image_url: Optional[str] = None
-    image_tag = soup.find("img")
+
+    # Look for product image inside product container
+    image_tag = soup.select_one("div._4WELSP._6lpKCl img")
     if isinstance(image_tag, Tag):
-        src_val = image_tag.get("src")
+        src_val = image_tag.get("src") or image_tag.get("data-src")
         image_url = str(src_val) if isinstance(src_val, str) else None
 
-    # Fallback: OpenGraph image
+    # Fallback: check OpenGraph meta
     if not image_url:
         og_img = soup.find("meta", property="og:image")
         if isinstance(og_img, Tag):
@@ -49,7 +51,6 @@ def parse_product_page(html: str) -> Dict[str, Optional[str]]:
     if isinstance(price_tag, Tag):
         price = price_tag.get_text(strip=True)
 
-    # Fallback: OpenGraph description with regex
     if not price:
         og_desc = soup.find("meta", property="og:description")
         if isinstance(og_desc, Tag):
@@ -68,7 +69,6 @@ def parse_product_page(html: str) -> Dict[str, Optional[str]]:
             li.get_text(strip=True) for li in desc_tags if isinstance(li, Tag)
         )
 
-    # Fallback: OpenGraph description
     if not description:
         og_desc = soup.find("meta", property="og:description")
         if isinstance(og_desc, Tag):
@@ -81,7 +81,6 @@ def parse_product_page(html: str) -> Dict[str, Optional[str]]:
     if isinstance(title_tag, Tag):
         model_name = title_tag.get_text(strip=True)
 
-    # Fallback: <meta property="og:title">
     if not model_name:
         og_title = soup.find("meta", property="og:title")
         if isinstance(og_title, Tag):
